@@ -1,5 +1,7 @@
 # Cursor Rules for Phaser.js Game Development
 
+Try to use as much canonical phaser.js project layouts and libraries and functions as possible
+
 ## Project Structure
 
 - Keep scenes, components, systems, and entities in separate directories
