@@ -53,6 +53,7 @@
 - Implement basic pistol weapon
 - Add projectile entity and system
 - Create collision detection for projectiles
+- Projectile graphics is just short lines for now
 - Add basic weapon switching logic
   **Technical Specs**:
 - Pistol damage: 20
@@ -66,6 +67,7 @@
 - Projectiles are destroyed on collision
 - Weapon has correct fire rate
 - Basic weapon switching works
+- Basic reloading works, automatically when clip empty + manually anytime
 
 ## Test Level Creation (LEV-1)
 

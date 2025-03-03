@@ -1,4 +1,5 @@
-import { MOVEMENT } from "../config/constants";
+import { MOVEMENT, WEAPONS } from "../config/constants";
+import { Weapon, WeaponStats } from "./Weapon";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private keys: {
@@ -6,10 +7,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     A: Phaser.Input.Keyboard.Key;
     S: Phaser.Input.Keyboard.Key;
     D: Phaser.Input.Keyboard.Key;
+    R: Phaser.Input.Keyboard.Key;
   };
   private isJumping: boolean = false;
   private isCrouching: boolean = false;
   private normalHeight: number;
+
+  // Weapon-related properties
+  private currentWeapon: Weapon;
+  private weapons: Map<string, Weapon> = new Map();
+  private mousePointer: Phaser.Input.Pointer;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
@@ -35,8 +42,68 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         A: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
         S: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
         D: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+        R: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
       };
     }
+
+    // Store mouse pointer reference
+    this.mousePointer = scene.input.activePointer;
+
+    // Initialize weapons
+    this.initializeWeapons(scene);
+
+    // Set up mouse click event for shooting
+    scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.leftButtonDown()) {
+        this.shoot();
+      }
+    });
+  }
+
+  private initializeWeapons(scene: Phaser.Scene): void {
+    // Create pistol weapon
+    const pistolStats: WeaponStats = {
+      damage: WEAPONS.PISTOL.DAMAGE,
+      fireRate: WEAPONS.PISTOL.FIRE_RATE,
+      projectileSpeed: WEAPONS.PISTOL.PROJECTILE_SPEED,
+      accuracy: WEAPONS.PISTOL.ACCURACY,
+      magazineSize: WEAPONS.PISTOL.MAGAZINE_SIZE,
+      reloadTime: WEAPONS.PISTOL.RELOAD_TIME,
+    };
+
+    // Create and add pistol to weapons map
+    const pistol = new Weapon(scene, pistolStats);
+    this.weapons.set("pistol", pistol);
+
+    // Set current weapon to pistol
+    this.currentWeapon = pistol;
+  }
+
+  // Method to handle shooting
+  private shoot(): void {
+    if (!this.currentWeapon) return;
+
+    // Calculate direction from player to cursor
+    const direction = new Phaser.Math.Vector2(
+      this.mousePointer.worldX - this.x,
+      this.mousePointer.worldY - this.y
+    ).normalize();
+
+    // Attempt to shoot
+    this.currentWeapon.shoot(this.x, this.y, direction);
+  }
+
+  // Method to switch weapons
+  public switchWeapon(weaponKey: string): void {
+    const weapon = this.weapons.get(weaponKey);
+    if (weapon) {
+      this.currentWeapon = weapon;
+    }
+  }
+
+  // Get current weapon's projectiles for collision detection
+  public getProjectiles(): Phaser.Physics.Arcade.Group {
+    return this.currentWeapon.getProjectiles();
   }
 
   update() {
@@ -77,6 +144,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Reset jump when touching ground
     if (this.body?.touching.down) {
       this.isJumping = false;
+    }
+
+    // Handle reload
+    if (this.keys.R.isDown && this.currentWeapon) {
+      this.currentWeapon.reload();
     }
   }
 }

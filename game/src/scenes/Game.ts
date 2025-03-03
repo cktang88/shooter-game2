@@ -35,8 +35,9 @@ export class Game extends Scene {
     );
     this.msg_text.setOrigin(0.5);
 
-    this.input.once("pointerdown", () => {
-      this.scene.start("GameOver");
+    // Handle keyboard events for various game actions
+    this.input.keyboard.on("keydown-ESC", () => {
+      this.scene.start("MainMenu");
     });
 
     // Create platforms
@@ -50,15 +51,70 @@ export class Game extends Scene {
     ) as Phaser.Physics.Arcade.Sprite;
     ground.setScale(2).refreshBody();
 
+    // Add some additional platforms for testing
+    this.platforms.create(600, 400, "platform");
+    this.platforms.create(50, 250, "platform");
+    this.platforms.create(750, 220, "platform");
+
     // Create player
     this.player = new Player(this, PLAYER.SPAWN_X, PLAYER.SPAWN_Y);
 
     // Add collision between player and platforms
     this.physics.add.collider(this.player, this.platforms);
 
+    // Add collision between projectiles and platforms
+    this.physics.add.collider(
+      this.player.getProjectiles(),
+      this.platforms,
+      this.handleProjectileCollision,
+      undefined,
+      this
+    );
+
     // Set up camera to follow player
     this.cameras.main.startFollow(this.player, true);
     this.cameras.main.setZoom(1);
+
+    // Show game instructions
+    this.createInstructionText();
+  }
+
+  private createInstructionText(): void {
+    const instructions = [
+      "WASD: Move",
+      "Mouse: Aim",
+      "Click: Shoot",
+      "R: Reload",
+      "ESC: Menu",
+    ];
+
+    const textStyle = {
+      fontFamily: "Arial",
+      fontSize: 16,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 2,
+    };
+
+    // Position in top-left corner, relative to camera
+    const instructionsText = this.add.text(
+      20,
+      20,
+      instructions.join("\n"),
+      textStyle
+    );
+
+    // Make the text stay fixed to the camera
+    instructionsText.setScrollFactor(0);
+  }
+
+  private handleProjectileCollision(
+    projectile: Phaser.Physics.Arcade.Sprite,
+    platform: Phaser.Physics.Arcade.Sprite
+  ): void {
+    // Deactivate the projectile
+    projectile.setActive(false);
+    projectile.setVisible(false);
   }
 
   update() {
