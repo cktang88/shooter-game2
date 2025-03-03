@@ -53,29 +53,30 @@ export class Weapon {
         Math.sin(randomAngle)
       ).normalize();
 
-      // Get a projectile from the pool
-      const projectile = this.projectiles.get() as Projectile;
+      // Create a new projectile object directly instead of using the pool
+      // This ensures we don't have positioning issues with reused projectiles
+      const projectile = new Projectile(this.scene, x, y);
+      this.projectiles.add(projectile);
 
-      if (projectile) {
-        projectile.fire(
-          x,
-          y,
-          newDirection,
-          this.stats.projectileSpeed,
-          this.stats.damage
-        );
+      // Fire the projectile
+      projectile.fire(
+        x,
+        y,
+        newDirection,
+        this.stats.projectileSpeed,
+        this.stats.damage
+      );
 
-        // Update last fired time and reduce ammo
-        this.lastFired = time;
-        this.ammoInClip--;
+      // Update last fired time and reduce ammo
+      this.lastFired = time;
+      this.ammoInClip--;
 
-        // Auto-reload when empty
-        if (this.ammoInClip === 0) {
-          this.reload();
-        }
-
-        return true;
+      // Auto-reload when empty
+      if (this.ammoInClip === 0) {
+        this.reload();
       }
+
+      return true;
     }
 
     return false;

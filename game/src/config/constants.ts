@@ -13,12 +13,12 @@ export const PLAYER = {
   HEIGHT: 48,
 } as const;
 
-// Weapon specifications based on WEAP-1 ticket
+// Weapon specifications based on updated WEAP-1 ticket
 export const WEAPONS = {
   PISTOL: {
     DAMAGE: 20,
     FIRE_RATE: 2, // shots per second
-    PROJECTILE_SPEED: 600, // pixels/second
+    PROJECTILE_SPEED: 1800, // pixels/second (updated from 600)
     ACCURACY: 95, // percentage (0-100)
     MAGAZINE_SIZE: 12,
     RELOAD_TIME: 1000, // milliseconds

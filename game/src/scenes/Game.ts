@@ -1,6 +1,8 @@
 import { Scene } from "phaser";
 import { Player } from "../objects/Player";
 import { PLAYER } from "../config/constants";
+import { Projectile } from "../objects/Projectile";
+import { HUD } from "../objects/HUD";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -8,6 +10,8 @@ export class Game extends Scene {
   msg_text: Phaser.GameObjects.Text;
   private player!: Player;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
+  private hud!: HUD;
+  private debugText!: Phaser.GameObjects.Text;
 
   constructor() {
     super("Game");
@@ -36,9 +40,11 @@ export class Game extends Scene {
     this.msg_text.setOrigin(0.5);
 
     // Handle keyboard events for various game actions
-    this.input.keyboard.on("keydown-ESC", () => {
-      this.scene.start("MainMenu");
-    });
+    if (this.input.keyboard) {
+      this.input.keyboard.on("keydown-ESC", () => {
+        this.scene.start("MainMenu");
+      });
+    }
 
     // Create platforms
     this.platforms = this.physics.add.staticGroup();
@@ -62,11 +68,25 @@ export class Game extends Scene {
     // Add collision between player and platforms
     this.physics.add.collider(this.player, this.platforms);
 
-    // Add collision between projectiles and platforms
+    // Add collision between projectiles and platforms using correct callback signature
     this.physics.add.collider(
       this.player.getProjectiles(),
       this.platforms,
-      this.handleProjectileCollision,
+      (obj1, obj2) => {
+        // Handle projectile collision
+        if (obj1 instanceof Phaser.Physics.Arcade.Sprite) {
+          // Cast to Projectile to access deactivate method
+          const projectile = obj1 as Projectile;
+          if (typeof projectile.deactivate === "function") {
+            projectile.deactivate();
+          } else {
+            // Fallback if for some reason we can't access the deactivate method
+            obj1.setActive(false);
+            obj1.setVisible(false);
+            obj1.body?.reset(0, 0);
+          }
+        }
+      },
       undefined,
       this
     );
@@ -77,6 +97,12 @@ export class Game extends Scene {
 
     // Show game instructions
     this.createInstructionText();
+
+    // Create HUD
+    this.hud = new HUD(this, this.player);
+
+    // Add debug mode indicator
+    this.createDebugIndicator();
   }
 
   private createInstructionText(): void {
@@ -108,17 +134,59 @@ export class Game extends Scene {
     instructionsText.setScrollFactor(0);
   }
 
-  private handleProjectileCollision(
-    projectile: Phaser.Physics.Arcade.Sprite,
-    platform: Phaser.Physics.Arcade.Sprite
-  ): void {
-    // Deactivate the projectile
-    projectile.setActive(false);
-    projectile.setVisible(false);
+  private createDebugIndicator(): void {
+    // Add debug mode indicator text
+    this.debugText = this.add.text(
+      this.cameras.main.width - 120,
+      20,
+      this.physics.world.drawDebug ? "DEBUG: ON" : "DEBUG: OFF",
+      {
+        fontFamily: "Arial",
+        fontSize: 16,
+        backgroundColor: "#00000088",
+        padding: { x: 8, y: 4 },
+        color: this.physics.world.drawDebug ? "#00ff00" : "#ff0000",
+      }
+    );
+
+    // Fix to camera
+    this.debugText.setScrollFactor(0);
+
+    // Add info about how to toggle debug mode
+    const debugHelpText = this.add.text(
+      this.cameras.main.width - 120,
+      50,
+      "Press Ctrl+D to toggle",
+      {
+        fontFamily: "Arial",
+        fontSize: 12,
+        backgroundColor: "#00000088",
+        padding: { x: 8, y: 4 },
+        color: "#ffffff",
+      }
+    );
+
+    // Fix to camera
+    debugHelpText.setScrollFactor(0);
   }
 
   update() {
     // Update player
     this.player.update();
+
+    // Update HUD
+    if (this.hud) {
+      this.hud.update();
+    }
+
+    // Update debug indicator
+    if (this.debugText) {
+      this.debugText.setText(
+        this.physics.world.drawDebug ? "DEBUG: ON" : "DEBUG: OFF"
+      );
+      this.debugText.setColor(
+        this.physics.world.drawDebug ? "#00ff00" : "#ff0000"
+      );
+    }
   }
 }

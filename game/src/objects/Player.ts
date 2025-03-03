@@ -14,7 +14,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private normalHeight: number;
 
   // Weapon-related properties
-  private currentWeapon: Weapon;
+  public currentWeapon: Weapon;
   private weapons: Map<string, Weapon> = new Map();
   private mousePointer: Phaser.Input.Pointer;
 
@@ -104,6 +104,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   // Get current weapon's projectiles for collision detection
   public getProjectiles(): Phaser.Physics.Arcade.Group {
     return this.currentWeapon.getProjectiles();
+  }
+
+  // Method to get the current weapon for HUD
+  public getCurrentWeapon(): Weapon {
+    return this.currentWeapon;
   }
 
   update() {

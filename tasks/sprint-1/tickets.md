@@ -53,12 +53,12 @@
 - Implement basic pistol weapon
 - Add projectile entity and system
 - Create collision detection for projectiles
-- Projectile graphics is just short lines for now
+- Projectile graphics is just short fast-moving lines (60px) for now
 - Add basic weapon switching logic
   **Technical Specs**:
 - Pistol damage: 20
 - Pistol fire rate: 2 shots/second
-- Projectile speed: 600 pixels/second
+- Projectile speed: 1800 pixels/second
 - Pistol accuracy: 95%
 - Magazine size: 12 bullets
   **Acceptance Criteria**:

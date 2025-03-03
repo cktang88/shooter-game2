@@ -5,6 +5,9 @@ import { MainMenu } from "./scenes/MainMenu";
 import { Game } from "./scenes/Game";
 import { GameOver } from "./scenes/GameOver";
 
+// Global debug flag for easy toggling
+let physicsDebug = true;
+
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
@@ -15,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
     default: "arcade",
     arcade: {
       gravity: { x: 0, y: 0 }, // We'll handle gravity per-sprite
-      debug: true, // Enable physics debugging
+      debug: physicsDebug, // Enable physics debugging
     },
   },
   scene: [Boot, Preloader, MainMenu, Game, GameOver],
@@ -26,6 +29,34 @@ const config: Phaser.Types.Core.GameConfig = {
   backgroundColor: "#0f172a", // Dark slate blue background
 };
 
+// Create the game instance
 window.addEventListener("load", () => {
-  new Phaser.Game(config);
+  // Create game and store it for reference
+  const game = new Phaser.Game(config);
+
+  // Add keyboard listener for debug toggle (Ctrl+D)
+  window.addEventListener("keydown", (event) => {
+    // Check for Ctrl+D to toggle debug mode
+    if (event.key === "d" && (event.ctrlKey || event.metaKey)) {
+      // Prevent default browser behavior
+      event.preventDefault();
+
+      // Toggle physics debugging
+      physicsDebug = !physicsDebug;
+
+      // Update the physics debug setting in all scenes
+      for (const scene of game.scene.scenes) {
+        if (scene.physics && scene.physics.world) {
+          scene.physics.world.drawDebug = physicsDebug;
+
+          // Also need to toggle the debug flag to show bodies
+          scene.physics.world.debugGraphic.clear();
+        }
+      }
+
+      console.log(
+        `Physics debug mode: ${physicsDebug ? "ENABLED" : "DISABLED"}`
+      );
+    }
+  });
 });

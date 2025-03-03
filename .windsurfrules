@@ -1,0 +1,125 @@
+# Cursor Rules for Phaser.js Game Development
+
+Try to use as much canonical phaser.js project layouts and libraries and functions as possible
+
+## Project Structure
+
+- Keep scenes, components, systems, and entities in separate directories
+- Group related assets (images, audio, etc.) in their own folders
+- Use a consistent naming convention for all files
+- Follow TypeScript best practices for type definitions
+- Store game configuration in separate config files
+- Keep system-specific code isolated in their respective files
+
+## Phaser.js Best Practices
+
+- Use Phaser's Scene lifecycle methods appropriately:
+  - preload: Load assets
+  - create: Create game objects
+  - update: Update game state
+- Properly destroy all game objects when no longer needed
+- Use texture atlases for sprite sheets
+- Implement proper asset preloading with loading screens
+- Use Phaser's built-in physics system appropriately
+- Consider arcade physics for simple games, matter.js for more complex physics
+- Leverage WebGL rendering when possible
+- Use Phaser's camera system for scrolling and effects
+- Utilize Phaser's event system instead of direct method calls
+- Implement proper asset cleanup in scene shutdown
+- Don't really need to use ECS since Phaser.js uses it internally already?
+
+## Performance Optimization
+
+- Implement object pooling for frequently created/destroyed objects (bullets, particles)
+- Use sprite sheets and texture atlases to minimize draw calls
+- Enable culling for off-screen objects
+- Use bitmap text for frequently updated text elements
+- Batch similar operations together
+- Minimize DOM interactions
+- Use requestAnimationFrame instead of setInterval/setTimeout
+- Profile game performance regularly with browser dev tools
+- Implement delta time in update methods for consistent movement
+- Use efficient data structures for collections
+
+## TypeScript Usage
+
+- Define strict types for all variables and parameters
+- Use interfaces for component definitions
+- Create enums for constants and state values
+- Utilize union types for varied behaviors
+- Implement generics for reusable systems
+- Use access modifiers (private, protected, public) appropriately
+- Create utility types for common patterns
+- Avoid any type when possible
+- Use readonly for immutable properties
+- Leverage type guards for runtime type checking
+
+## Audio Management
+
+- Preload all audio files
+- Implement volume control for different audio categories
+- Use audio sprites for short sound effects
+- Implement proper audio pooling for frequently played sounds
+- Support muting and volume adjustment
+- Use WebAudio API through Phaser for advanced audio features
+- Add fallbacks for unsupported audio formats
+- Implement spatial audio for 2D environment
+
+## Asset Management
+
+- Optimize all assets before loading
+- Use appropriate image formats (PNG for transparency, WebP/JPEG for others)
+- Implement progressive loading for large assets
+- Create loading screens with progress indicators
+- Unload unused assets when changing scenes
+- Use consistent naming conventions for all assets
+- Organize assets by type and usage
+- Implement asset versioning for cache busting
+
+## Input Handling
+
+- Create an input abstraction layer to support multiple input methods
+- Implement proper touch controls for mobile
+- Use Phaser's input manager consistently
+- Handle input in dedicated systems
+- Support keyboard, mouse, and touch inputs
+- Implement input buffering for action games
+- Allow input remapping in settings
+- Use pointerdown/pointerup for cross-platform support
+
+## Debugging
+
+- Use Phaser's debug features (physics debug, camera debug)
+- Implement custom debug displays when needed
+- Create developer console for runtime adjustments
+- Add FPS counter for performance monitoring
+- Implement logging system with different levels
+- Create visual debugging tools for hitboxes, paths, etc.
+- Add cheat codes for testing features
+- Use browser dev tools for performance profiling
+
+## Code Style
+
+- Use consistent indentation (2 spaces recommended)
+- Follow a naming convention (camelCase for variables/methods, PascalCase for classes)
+- Add clear comments for complex logic
+- Document public APIs with JSDoc
+- Use meaningful variable and function names
+- Keep functions small and focused
+- Follow the Single Responsibility Principle
+- Implement error handling for potential failure points
+- Add type safety with TypeScript
+- Write unit tests for critical game systems
+
+## Game Design
+
+- Implement proper game loops with distinct states
+- Maintain a consistent frame rate
+- Balance game mechanics through config files
+- Create scalable difficulty levels
+- Design clear visual feedback for player actions
+- Implement proper save/load functionality
+- Create pause functionality
+- Support multiple screen resolutions
+- Add user settings for customization
+- Design mobile-friendly UI when targeting mobile

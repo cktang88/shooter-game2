@@ -40,7 +40,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     this.setVelocity(direction.x * speed, direction.y * speed);
 
     // Draw the projectile as a simple line
-    this.drawProjectile();
+    this.drawProjectile(direction);
 
     // Activate the projectile
     this.setActive(true);
@@ -49,18 +49,25 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     this.spawnTime = this.scene.time.now;
   }
 
-  drawProjectile(): void {
+  drawProjectile(direction: Phaser.Math.Vector2): void {
     // Create a temporary graphics object to draw the projectile
     const graphics = this.scene.add.graphics();
 
     // Set line style (color, alpha, width)
     graphics.lineStyle(2, 0xffffff, 1);
 
-    // Draw line
-    graphics.lineBetween(0, 0, 10, 0);
+    // Create a longer projectile (60px as specified in ticket)
+    const projectileLength = 60;
+
+    // Draw a line in the direction the projectile is heading
+    graphics.lineBetween(0, 0, projectileLength, 0);
 
     // Generate texture from the graphics
-    const texture = graphics.generateTexture("projectile_texture", 12, 4);
+    const texture = graphics.generateTexture(
+      "projectile_texture",
+      projectileLength + 4,
+      4
+    );
 
     // Clear the graphics object as we no longer need it
     graphics.clear();
@@ -69,8 +76,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     // Use the generated texture
     this.setTexture("projectile_texture");
 
-    // Set origin to center
-    this.setOrigin(0.5, 0.5);
+    // Set origin to left center so projectile points in direction of travel
+    this.setOrigin(0, 0.5);
+
+    // Rotate the projectile to face the direction of travel
+    this.rotation = Math.atan2(direction.y, direction.x);
   }
 
   getDamage(): number {
@@ -85,6 +95,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
   }
 
   deactivate(): void {
+    // Ensure the projectile is completely deactivated
     this.setActive(false);
     this.setVisible(false);
     this.isActive = false;
@@ -92,8 +103,19 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     // Safely reset body
     if (this.body) {
       this.body.reset(0, 0);
+      this.body.stop();
+
+      // Ensure the projectile doesn't continue to be checked for collisions
+      this.body.enable = false;
     }
 
+    // Reset velocity
     this.setVelocity(0, 0);
+
+    // Move the projectile offscreen
+    this.setPosition(-1000, -1000);
+
+    // Destroy the projectile completely to avoid pooling issues
+    this.destroy();
   }
 }
