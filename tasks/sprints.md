@@ -10,7 +10,7 @@ This document outlines the development sprints for the Raze Game Clone, starting
 
 ### Tasks:
 
-1. Set up project structure with Phaser.js, TypeScript, and ECS architecture
+1. Set up project structure with Phaser.js, TypeScript.
 2. Implement basic player movement system
    - WASD/Arrow key movement
    - Basic jumping mechanics

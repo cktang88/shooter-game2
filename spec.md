@@ -2,7 +2,7 @@
 
 ## Game Overview
 
-Raze is a 2D side-scrolling shooter game featuring fast-paced combat, various weapons, multiple game modes, and character customization. This clone aims to recreate the core experience using Phaser.js, TypeScript, and an Entity Component System (ECS) architecture.
+Raze is a 2D side-scrolling shooter game featuring fast-paced combat, various weapons, multiple game modes, and character customization. This clone aims to recreate the core experience using Phaser.js, TypeScript.
 
 ## Core Gameplay Features
 
@@ -139,12 +139,6 @@ Raze is a 2D side-scrolling shooter game featuring fast-paced combat, various we
   - Special abilities
 
 ## Technical Architecture
-
-### Entity Component System (ECS)
-
-- **Entities**: Game objects like players, enemies, projectiles, etc.
-- **Components**: Data containers for entities (Position, Health, Sprite, etc.)
-- **Systems**: Logic that processes entities with specific components
 
 ### Core Systems
 

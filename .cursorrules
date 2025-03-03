@@ -9,18 +9,6 @@
 - Store game configuration in separate config files
 - Keep system-specific code isolated in their respective files
 
-## ECS Architecture
-
-- Keep entities lightweight, primarily as containers for components
-- Components should only store data, not implement behavior
-- Systems should handle all game logic and behavior
-- Maintain a clear separation between components and systems
-- Register components and systems at initialization
-- Use typed interfaces for all components
-- Implement component serialization for save/load functionality
-- Keep entities organized by scene or level
-- Use component flags or tags for efficient entity filtering
-
 ## Phaser.js Best Practices
 
 - Use Phaser's Scene lifecycle methods appropriately:
@@ -36,6 +24,7 @@
 - Use Phaser's camera system for scrolling and effects
 - Utilize Phaser's event system instead of direct method calls
 - Implement proper asset cleanup in scene shutdown
+- Don't really need to use ECS since Phaser.js uses it internally already?
 
 ## Performance Optimization
 

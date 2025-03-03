@@ -4,19 +4,17 @@
 
 **Priority**: P0
 **Estimate**: 4 hours
-**Description**: Set up initial project structure with Phaser.js, TypeScript, and ECS architecture
+**Description**: Set up initial project structure with Phaser.js, TypeScript.
 **Tasks**:
 
 - Initialize new Vite + TypeScript project
 - Install and configure Phaser.js
-- Set up ECS architecture base classes (Entity, Component, System)
 - Configure build and development environment
 - Set up linting and formatting
   **Acceptance Criteria**:
 - Project builds successfully
 - Development server runs without errors
 - TypeScript compilation works
-- Basic ECS architecture is in place
 - README with setup instructions exists
 
 ## Basic Movement System (MOVE-1)
