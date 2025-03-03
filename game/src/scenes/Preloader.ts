@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { LEVEL } from "../config/constants";
 
 export class Preloader extends Scene {
   constructor() {
@@ -31,8 +32,8 @@ export class Preloader extends Scene {
       progress.fillRect(0, 270, 800 * value, 60);
     });
 
-    // Load assets
-    this.load.image("background", "assets/background.png");
+    // Generate a proper background
+    this.generateBackground();
 
     // Load player assets - using a muted blue color
     const playerGraphics = this.add.graphics();
@@ -47,6 +48,55 @@ export class Preloader extends Scene {
     platformGraphics.fillRect(0, 0, 400, 32);
     platformGraphics.generateTexture("platform", 400, 32);
     platformGraphics.destroy();
+  }
+
+  // Generate a textured background
+  private generateBackground(): void {
+    // Try to load the existing background image first
+    if (this.textures.exists("background")) {
+      return;
+    }
+
+    // Create a graphics object for the background
+    const bg = this.add.graphics();
+
+    // Create a gradient background
+    const gradientWidth = 512;
+    const gradientHeight = 384;
+
+    // Draw the gradient (dark blue to lighter blue)
+    for (let y = 0; y < gradientHeight; y++) {
+      const ratio = y / gradientHeight;
+      // Interpolate between a dark and light color
+      const r = Math.floor(2 + (30 - 2) * ratio);
+      const g = Math.floor(2 + (41 - 2) * ratio);
+      const b = Math.floor(8 + (22 - 8) * ratio);
+      bg.fillStyle(Phaser.Display.Color.GetColor(r, g, b));
+      bg.fillRect(0, y, gradientWidth, 1);
+    }
+
+    // Add some "stars" for visual interest
+    bg.fillStyle(0xffffff, 0.3);
+    for (let i = 0; i < 100; i++) {
+      const x = Math.random() * gradientWidth;
+      const y = Math.random() * gradientHeight;
+      const size = 1 + Math.random() * 2;
+      bg.fillRect(x, y, size, size);
+    }
+
+    // Add some grid lines for spatial reference
+    bg.lineStyle(1, 0xffffff, 0.1);
+    const gridSize = 64;
+    for (let x = 0; x < gradientWidth; x += gridSize) {
+      bg.lineBetween(x, 0, x, gradientHeight);
+    }
+    for (let y = 0; y < gradientHeight; y += gridSize) {
+      bg.lineBetween(0, y, gradientWidth, y);
+    }
+
+    // Generate the texture
+    bg.generateTexture("background", gradientWidth, gradientHeight);
+    bg.destroy();
   }
 
   create() {

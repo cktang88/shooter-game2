@@ -11,6 +11,10 @@ export const PLAYER = {
   SPAWN_Y: 100,
   WIDTH: 32,
   HEIGHT: 48,
+  HEALTH: 100,
+  HEALTH_REGEN: 1, // HP per second
+  RESPAWN_TIME: 3000, // milliseconds
+  SPAWN_INVULNERABILITY: 2000, // milliseconds
 } as const;
 
 // Weapon specifications based on updated WEAP-1 ticket
@@ -23,4 +27,15 @@ export const WEAPONS = {
     MAGAZINE_SIZE: 12,
     RELOAD_TIME: 1000, // milliseconds
   },
+} as const;
+
+// Level specifications based on LEV-1 ticket
+export const LEVEL = {
+  WIDTH: 1920,
+  HEIGHT: 1080,
+  PLATFORM_THICKNESS: 8,
+  MIN_PLATFORM_WIDTH: 128,
+  BOUNDARY_THICKNESS: 10,
+  TIER_HEIGHT: 70, // Reduced to be less than max jump height (must account for player standing on platform)
+  MAX_JUMP_HEIGHT: 82, // Maximum jump height based on physics (v²/2g)
 } as const;

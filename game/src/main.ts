@@ -4,6 +4,7 @@ import { Preloader } from "./scenes/Preloader";
 import { MainMenu } from "./scenes/MainMenu";
 import { Game } from "./scenes/Game";
 import { GameOver } from "./scenes/GameOver";
+import { LEVEL } from "./config/constants";
 
 // Global debug flag for easy toggling
 let physicsDebug = true;
@@ -25,6 +26,9 @@ const config: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    // Use the full level dimensions for the game world, but keep the canvas size at 1200x800
+    width: 1200,
+    height: 800,
   },
   backgroundColor: "#0f172a", // Dark slate blue background
 };

@@ -1,15 +1,16 @@
 import { Scene } from "phaser";
 import { Player } from "../objects/Player";
-import { PLAYER } from "../config/constants";
+import { PLAYER, LEVEL } from "../config/constants";
 import { Projectile } from "../objects/Projectile";
 import { HUD } from "../objects/HUD";
+import { Level } from "../objects/Level";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   msg_text: Phaser.GameObjects.Text;
   private player!: Player;
-  private platforms!: Phaser.Physics.Arcade.StaticGroup;
+  private level!: Level;
   private hud!: HUD;
   private debugText!: Phaser.GameObjects.Text;
 
@@ -21,17 +22,31 @@ export class Game extends Scene {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0xcccccc);
 
-    this.background = this.add.image(512, 384, "background");
+    // Setup world bounds based on level size
+    this.physics.world.setBounds(0, 0, LEVEL.WIDTH, LEVEL.HEIGHT);
+
+    // Create a background that fits the level
+    this.background = this.add.image(
+      LEVEL.WIDTH / 2,
+      LEVEL.HEIGHT / 2,
+      "background"
+    );
+    this.background.setDisplaySize(LEVEL.WIDTH, LEVEL.HEIGHT);
     this.background.setAlpha(0.5);
 
-    this.msg_text = this.add.text(512, 384, "This is Raze.", {
-      fontFamily: "Arial Black",
-      fontSize: 38,
-      color: "#ffffff",
-      stroke: "#000000",
-      strokeThickness: 8,
-      align: "center",
-    });
+    this.msg_text = this.add.text(
+      LEVEL.WIDTH / 2,
+      LEVEL.HEIGHT / 2,
+      "This is Raze.",
+      {
+        fontFamily: "Arial Black",
+        fontSize: 38,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      }
+    );
     this.msg_text.setOrigin(0.5);
 
     // Handle keyboard events for various game actions
@@ -41,32 +56,21 @@ export class Game extends Scene {
       });
     }
 
-    // Create platforms
-    this.platforms = this.physics.add.staticGroup();
+    // Create level
+    this.level = new Level(this);
 
-    // Add ground platform
-    const ground = this.platforms.create(
-      400,
-      568,
-      "platform"
-    ) as Phaser.Physics.Arcade.Sprite;
-    ground.setScale(2).refreshBody();
+    // Create player at the spawn point
+    const playerSpawn = this.level.getPlayerSpawnPoint();
+    this.player = new Player(this, playerSpawn.x, playerSpawn.y);
 
-    // Add some additional platforms for testing
-    this.platforms.create(600, 400, "platform");
-    this.platforms.create(50, 250, "platform");
-    this.platforms.create(750, 220, "platform");
+    // Add collisions between player and level elements
+    this.physics.add.collider(this.player, this.level.getPlatforms());
+    this.physics.add.collider(this.player, this.level.getBoundaries());
 
-    // Create player
-    this.player = new Player(this, PLAYER.SPAWN_X, PLAYER.SPAWN_Y);
-
-    // Add collision between player and platforms
-    this.physics.add.collider(this.player, this.platforms);
-
-    // Add collision between projectiles and platforms using correct callback signature
+    // Add collision between projectiles and level elements
     this.physics.add.collider(
       this.player.getProjectiles(),
-      this.platforms,
+      this.level.getPlatforms(),
       (obj1, obj2) => {
         // Handle projectile collision
         if (obj1 instanceof Phaser.Physics.Arcade.Sprite) {
@@ -86,8 +90,9 @@ export class Game extends Scene {
       this
     );
 
-    // Set up camera to follow player
+    // Set up camera to follow player and respect level bounds
     this.cameras.main.startFollow(this.player, true);
+    this.cameras.main.setBounds(0, 0, LEVEL.WIDTH, LEVEL.HEIGHT);
     this.cameras.main.setZoom(1);
 
     // Show game instructions
@@ -168,6 +173,9 @@ export class Game extends Scene {
   update() {
     // Update player
     this.player.update();
+
+    // Update level
+    this.level.update();
 
     // Update HUD
     if (this.hud) {

@@ -83,7 +83,7 @@
 - Add spawn points
   **Technical Specs**:
 - Level size: 1920x1080 pixels
-- Platform thickness: 32 pixels
+- Platform thickness: 8 pixels
 - Minimum platform width: 128 pixels
 - Level boundaries: solid walls
   **Acceptance Criteria**:
@@ -92,6 +92,34 @@
 - Player can move and jump between platforms
 - Level boundaries prevent player from leaving
 - Spawn points work correctly
+
+## Basic Enemy System (ENEMY-1)
+
+**Priority**: P1
+**Estimate**: 6 hours
+**Description**: Implement basic enemy entities that move on platforms and interact with the player
+**Tasks**:
+
+- Create Enemy entity with required components (Position, Velocity, Health)
+- Implement simple AI for random movement on platforms
+- Add collision detection with platforms, player, and projectiles
+- Create enemy spawn system
+- Implement basic enemy graphics (simple placeholder sprites)
+- Add damage handling for enemies
+  **Technical Specs**:
+- Enemy movement speed: 100 pixels/second
+- Enemy health: 50
+- Random movement: Change direction every 2-5 seconds
+- Spawn rate: Configurable, default 1 enemy per 10 seconds
+- Platform awareness: Enemies don't fall off edges
+- Collision damage to player: 10 per hit
+  **Acceptance Criteria**:
+- Enemies spawn correctly in the level
+- Enemies move randomly on platforms without falling off
+- Enemies collide properly with platforms and boundaries
+- Enemies take damage from player projectiles
+- Enemies damage player on collision
+- Enemies die when health reaches 0
 
 ## Health System (HLTH-1)
 
