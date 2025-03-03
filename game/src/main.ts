@@ -12,8 +12,8 @@ let physicsDebug = true;
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: 1200,
+  height: 800,
   physics: {
     default: "arcade",
     arcade: {

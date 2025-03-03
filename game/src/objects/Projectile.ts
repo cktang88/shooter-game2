@@ -54,7 +54,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     const graphics = this.scene.add.graphics();
 
     // Set line style (color, alpha, width)
-    graphics.lineStyle(2, 0xffffff, 1);
+    graphics.lineStyle(2, 0xffffff, 2);
 
     // Create a longer projectile (60px as specified in ticket)
     const projectileLength = 60;

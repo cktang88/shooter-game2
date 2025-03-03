@@ -57,8 +57,8 @@
 - Add basic weapon switching logic
   **Technical Specs**:
 - Pistol damage: 20
-- Pistol fire rate: 2 shots/second
-- Projectile speed: 1800 pixels/second
+- Pistol fire rate: 3 shots/second
+- Projectile speed: 2200 pixels/second
 - Pistol accuracy: 95%
 - Magazine size: 12 bullets
   **Acceptance Criteria**:

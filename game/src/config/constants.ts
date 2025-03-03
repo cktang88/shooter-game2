@@ -17,8 +17,8 @@ export const PLAYER = {
 export const WEAPONS = {
   PISTOL: {
     DAMAGE: 20,
-    FIRE_RATE: 2, // shots per second
-    PROJECTILE_SPEED: 1800, // pixels/second (updated from 600)
+    FIRE_RATE: 3, // shots per second
+    PROJECTILE_SPEED: 2200, // pixels/second
     ACCURACY: 95, // percentage (0-100)
     MAGAZINE_SIZE: 12,
     RELOAD_TIME: 1000, // milliseconds
